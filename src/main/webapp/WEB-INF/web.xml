@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5">
+	<display-name>contract-manage</display-name>
+	<description>合同管理系统</description>
+	<context-param>
+		<param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
+		<param-value>StripesResources</param-value>
+	</context-param>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:applicationContext.xml
+		</param-value>
+	</context-param>
+	<context-param>
+		<!-- 系统标示，用于系统基础模块区分所属系统，和字典中的项一一对应 -->
+		<param-name>sys_belonging_system</param-name>
+		<param-value>all,contract-manage</param-value>
+	</context-param>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<!-- Spring 防内存泄露 -->
+	<listener>
+		<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+	</listener>
+	<filter>
+		<display-name>Stripes Filter</display-name>
+		<filter-name>StripesFilter</filter-name>
+		<filter-class>net.sourceforge.stripes.controller.StripesFilter</filter-class>
+		<init-param>
+			<param-name>ActionResolver.Packages</param-name>
+			<param-value>
+				com.tmwsoft.common.action,
+				com.tmwsoft.sys.action,
+				com.tmwsoft.contract.action
+			</param-value>
+		</init-param>
+		<init-param>
+			<param-name>Interceptor.Classes</param-name>
+			<param-value>net.sourceforge.stripes.integration.spring.SpringInterceptor</param-value>
+		</init-param>
+        <init-param>
+            <param-name>ActionBeanContext.Class</param-name>
+            <param-value>com.tmwsoft.common.web.BaseActionBeanContext</param-value>
+        </init-param>
+        <init-param>
+    		<param-name>MultipartWrapper.Class</param-name>
+    		<param-value>net.sourceforge.stripes.controller.multipart.CommonsMultipartWrapper</param-value>
+		</init-param>
+        <init-param>
+    		<param-name>FileUpload.MaximumPostSize</param-name>
+    		<param-value>1mb</param-value>
+		</init-param>
+		<init-param>
+			<param-name>LocalePicker.Locales</param-name>
+			<param-value>zh_CN:UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>Stripes.DebugMode</param-name>
+			<param-value>false</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>StripesFilter</filter-name>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+	<servlet>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<servlet-class>com.tmwsoft.common.web.BaseDispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>StripesDispatcher</servlet-name>
+		<url-pattern>*.action</url-pattern>
+	</servlet-mapping>
+	<!-- Session超时配置，单位分钟 -->
+	<session-config>
+		<session-timeout>30</session-timeout>
+	</session-config>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/notfound.html</location>
+	</error-page>
+	<error-page>
+		<exception-type>java.lang.Exception</exception-type>
+		<location>/error.jsp</location>
+	</error-page>
+	<welcome-file-list>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+</web-app>
